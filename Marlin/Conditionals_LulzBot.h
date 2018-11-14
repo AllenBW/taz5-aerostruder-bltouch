@@ -90,6 +90,13 @@
     #define LULZBOT_BAUDRATE 250000
     #define LULZBOT_PRINTCOUNTER
     #define LULZBOT_UUID "c3255c96-4097-4884-8ed0-ded2ff9bae61"
+    #define BLTOUCH                                             // Cuz we wanta use it ya know
+    #define LULZBOT_Z_PROBE_LOW_POINT  -6                       // Farthest distance below the trigger-point to go before stopping
+    #define LULZBOT_AUTO_BED_LEVELING_BILINEAR                  // Specified here because its cleaner than mucking around elsewhere
+    #define LULZBOT_LEFT_PROBE_BED_POSITION       24            // These dimensions create the "invisible bound box" in which the bltouch will operate, note the left_probe is a +24 offset
+    #define LULZBOT_RIGHT_PROBE_BED_POSITION     258
+    #define LULZBOT_BACK_PROBE_BED_POSITION      270
+    #define LULZBOT_FRONT_PROBE_BED_POSITION      10
 #endif
 
 #if defined(LULZBOT_Oliveoil_TAZ6)
@@ -294,7 +301,7 @@
 #elif defined(LULZBOT_IS_TAZ) && !defined(LULZBOT_USE_HOME_BUTTON)
     // TAZ 5 safe homing position so fan duct does not hit.
     #define LULZBOT_Z_SAFE_HOMING
-    #define LULZBOT_Z_SAFE_HOMING_X_POINT         10
+    #define LULZBOT_Z_SAFE_HOMING_X_POINT         24          // Cuz Angelfish_Aerostruder bltouch mount is +24 from nozzle
     #define LULZBOT_Z_SAFE_HOMING_Y_POINT         10
     #define LULZBOT_Z_HOMING_HEIGHT               5
 #else
@@ -422,8 +429,8 @@
 #elif defined(LULZBOT_AUTO_BED_LEVELING_LINEAR) || defined(LULZBOT_AUTO_BED_LEVELING_BILINEAR)
   // Traditionally LulzBot printers have employed a four-point leveling
   // using a degenerate 2x2 grid. This is the traditional behavior.
-  #define LULZBOT_GRID_MAX_POINTS_X            2
-  #define LULZBOT_GRID_MAX_POINTS_Y            2
+  #define LULZBOT_GRID_MAX_POINTS_X            3                        // you could pick 4 if yah wanted
+  #define LULZBOT_GRID_MAX_POINTS_Y            3
   #if defined(LULZBOT_IS_MINI)
     // We can't control the order of probe points exactly, but
     // this makes the probe start closer to the wiper pad.
@@ -459,9 +466,9 @@
 #endif // LULZBOT_USE_AUTOLEVELING
 
 #define LULZBOT_MULTIPLE_PROBING              2
-#define LULZBOT_X_PROBE_OFFSET_FROM_EXTRUDER  0
-#define LULZBOT_Y_PROBE_OFFSET_FROM_EXTRUDER  0
-#define LULZBOT_Z_PROBE_OFFSET_RANGE_MIN      -2
+#define LULZBOT_X_PROBE_OFFSET_FROM_EXTRUDER  24                // this is the biggie, Angelfish_Aerostruder probe is +24 mm directly right of the nozzle, gotta account for that
+#define LULZBOT_Y_PROBE_OFFSET_FROM_EXTRUDER  0                 // BUT Angelfish_Aerostruder probe is at the same y as the nozzle, so thats kinda nice
+#define LULZBOT_Z_PROBE_OFFSET_RANGE_MIN      -6                // this allows for higher z-probe offset, depends on how your bltouch is mounted
 #define LULZBOT_Z_PROBE_OFFSET_RANGE_MAX      5
 #define LULZBOT_XY_PROBE_SPEED                6000
 #define LULZBOT_Z_PROBE_SPEED_SLOW           (1*60)
@@ -1161,7 +1168,7 @@
 #endif
 
 // Electrical probing pins are always open until contact is made
-#define LULZBOT_Z_MIN_ENDSTOP_INVERTING       LULZBOT_NORMALLY_OPEN_ENDSTOP
+#define LULZBOT_Z_MIN_ENDSTOP_INVERTING       false                                   // cuz we're using bltouch
 #define LULZBOT_Z_MIN_PROBE_ENDSTOP_INVERTING LULZBOT_NORMALLY_OPEN_ENDSTOP
 
 /******************************* MOTOR DRIVER TYPE ******************************/
@@ -1794,7 +1801,7 @@
     #endif
 
     #if not defined(LULZBOT_Z_PROBE_OFFSET_FROM_EXTRUDER)
-        #define LULZBOT_Z_PROBE_OFFSET_FROM_EXTRUDER -1.200
+        #define LULZBOT_Z_PROBE_OFFSET_FROM_EXTRUDER -1.70
     #endif
 #endif
 
